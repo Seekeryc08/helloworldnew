@@ -1,41 +1,52 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title></title>
+<head>
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+<script>
+/* This is from http://www.w3schools.com/googleapi/google_maps_basic.asp */
+function initialize() {
+  var mapProp = {
+    center:new google.maps.LatLng(51.508742,-0.120850),
+    zoom:5,
+    mapTypeId:google.maps.MapTypeId.ROADMAP
+  };
+  var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+}
+google.maps.event.addDomListener(window, 'load', initialize);
+        //GET USER's LOCATION
+        var onSuccess = function(position) {
 
-    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+          alert('Latitude: '+ position.coords.latitude + '\n'
+              + 'Longitude: '+ position.coords.longitude);
+              //geolocation working on my browser but NOT ON MY DEVICE; lat/lng is wrong!
 
-    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
-    <link href="css/ionic.app.css" rel="stylesheet">
-    -->
+          map.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+          var myLocation = new google.maps.Marker({
+              position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+              map: map,
+              title: "My Location"
+          });
 
-    <!-- ionic/angularjs js -->
-    <script src="lib/ionic/js/ionic.bundle.js"></script>
+        };
 
-    <!-- cordova script (this will be a 404 during development) -->
-    <script src="cordova.js"></script>
+        function onError(error) {
+            alert('code: '    + error.code    + '\n' +
+                  'message: ' + error.message + '\n');
+        }
 
-    <!-- your app's js -->
-    <script src="js/app.js"></script>
-    <script src="js/controllers.js"></script>
-    <script src="js/services.js"></script>
-  </head>
-  <body ng-app="starter">
-    <!--
-      The nav bar that will be updated as we navigate between views.
-    -->
-    <ion-nav-bar class="bar-stable">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
-    </ion-nav-bar>
-    <!--
-      The views will be rendered in the <ion-nav-view> directive below
-      Templates are in the /templates folder (but you could also
-      have templates inline in this html file if you'd like).
-    -->
-    <ion-nav-view></ion-nav-view>
-  </body>
+        //UNABLE TO GET USER'S LOCATION ON DEVICE
+        navigator.geolocation.getCurrentPosition(onSuccess, onError); //onSuccess callback runs!
+
+/*ANDROID APK GENERATED AND TESTED ON MARK'S ANDROID PHONE! http://ionicframework.com/docs/guide/publishing.html
+cordova plugin rm cordova-plugin-console
+cordova build --release android
+go to platforms/android/build/outputs/apk, send the .apk files to mobile
+*/
+</script>
+</head>
+
+<body>
+<div id="googleMap" style="width:500px;height:380px;"></div>
+</body>
+
 </html>
